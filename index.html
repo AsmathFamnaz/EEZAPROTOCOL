@@ -124,10 +124,7 @@ Decrypt the five secrets from the haunted network....Every second counts...</p>
           <label for="in4">Secret 4 </label>
           <input id="in4" type="text" maxlength="10" placeholder="Type the fourth secret" required />
         </div>
-        <div class="full">
-          <label for="in5">Secret 5 </label>
-          <input id="in5" type="text" maxlength="20" placeholder="Type the fifth secret" required />
-        </div>
+       
         <div class="full actions">
           <button id="checkBtn" class="primary" type="button">Validate Secrets</button>
           <button id="clearBtn" class="ghost" type="button">Clear</button>
@@ -147,8 +144,13 @@ Decrypt the five secrets from the haunted network....Every second counts...</p>
 
   <script>
     (function(){
-      const EXPECTED = ["SIMPLE","EXE","451","TIME"];
-      const inps = ["in1","in2","in3","in4","in5"].map(id=>document.getElementById(id));
+      const VALID_SETS = [
+  ["SIMPLE","EXE","451","TIME"], // first valid combo
+  ["TRUST","GHOST","451","DELAY"], // second valid combo
+  ["KEY","PHISH","451","TIME"] // third valid combo
+];
+
+      const inps = ["in1","in2","in3","in4"].map(id=>document.getElementById(id));
       const statusText = document.getElementById('statusText');
       const attemptsEl = document.getElementById('attempts');
       const virus = document.getElementById('virus');
@@ -182,33 +184,42 @@ updateTimer();
 
 
       function normalize(v){ return (v||'').toString().trim(); }
+function checkAll() {
+  attempts++;
+  attemptsEl.textContent = attempts;
 
-      function checkAll(){
-        attempts++;
-        attemptsEl.textContent = attempts;
-        const entered = inps.map(i=>normalize(i.value));
-        const feedback = [];
-        let allMatch = true;
-        for(let i=0;i<EXPECTED.length;i++){
-          const exp = EXPECTED[i];
-          const val = entered[i];
-          if(exp === '451'){
-            if(val === exp){ feedback.push(true);} else { feedback.push(false); allMatch=false; }
-          } else {
-            if(val.toUpperCase() === exp){ feedback.push(true);} else { feedback.push(false); allMatch=false; }
-          }
-        }
+  const entered = inps.map(i => normalize(i.value).toUpperCase());
+  let matchFound = false;
+  let feedback = new Array(inps.length).fill(false);
 
-        if(allMatch){
-          statusText.innerHTML = '<span class="ok">All secrets validated. Virus successfully cleared!</span>';
-          showVirusCleared();
-        } else {
-          const fields = ['Secret 1','Secret 2','Secret 3','Secret 4','Secret 5'];
-          const wrong = fields.filter((f,i)=>!feedback[i]);
-          statusText.innerHTML = '<span class="err">Validation failed. Incorrect: ' + wrong.join(', ') + '.</span>';
-          flashInvalidFields(feedback);
-        }
+  // Check each valid set
+  for (const set of VALID_SETS) {
+    let setMatches = true;
+    for (let i = 0; i < set.length; i++) {
+      if (entered[i] === set[i]) {
+        feedback[i] = true;
+      } else {
+        setMatches = false;
+        feedback[i] = false;
       }
+    }
+    if (setMatches) {
+      matchFound = true;
+      break; // stop at first matching set
+    }
+  }
+
+  if (matchFound) {
+    statusText.innerHTML = '<span class="ok">All secrets validated. Virus successfully cleared!</span>';
+    showVirusCleared();
+  } else {
+    const fields = ['Secret 1','Secret 2','Secret 3','Secret 4','Secret 5'];
+    const wrong = fields.filter((f, i) => !feedback[i]);
+    statusText.innerHTML = '<span class="err">Validation failed. Incorrect: ' + wrong.join(', ') + '.</span>';
+    flashInvalidFields(feedback);
+  }
+}
+
 
       function flashInvalidFields(feedback){
         for(let i=0;i<feedback.length;i++){
