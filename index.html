@@ -140,23 +140,10 @@ Decrypt the five secrets from the haunted network....Every second counts...</p>
 
   <div id="virus" class="virus-banner" role="alert" aria-hidden="true"><p style="font-size:80px;">VIRUS CLEARED</p><br> <p style="font-size:30px;">Gong Enterprises Secure</p></div>
 
- <audio id="bgSound" loop>
-  <source src="audio.mp3" type="audio/mpeg">
-</audio>
 
 
   <script>
-    const bgSound = document.getElementById('bgSound');
-
-// Try to play immediately (some browsers may block)
-bgSound.play().catch(() => {
-  // If blocked, play on first click anywhere
-  document.body.addEventListener('click', function playAudio() {
-    bgSound.play().catch(err => console.log('Audio play failed:', err));
-    document.body.removeEventListener('click', playAudio);
-  });
-});
-
+   
     (function(){
       const VALID_SETS = [
   ["SIMPLE","EXE","451","TIME"], // first valid combo
