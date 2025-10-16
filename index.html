@@ -143,11 +143,11 @@ Decrypt the five secrets from the haunted network....Every second counts...</p>
 
   <div id="virus" class="virus-banner" role="alert" aria-hidden="true"><p style="font-size:80px;">VIRUS CLEARED</p><br> <p style="font-size:30px;">Gong Enterprises Secure</p></div>
 
-  <audio id="bgSound" loop autoplay><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+  <audio id="bgSound" loop autoplay><source src="audio.mp3" type="audio/mpeg"></audio>
 
   <script>
     (function(){
-      const EXPECTED = ["KEY","TRUST","SIMPLE","451","TIME"];
+      const EXPECTED = ["SIMPLE","EXE","451","TIME"];
       const inps = ["in1","in2","in3","in4","in5"].map(id=>document.getElementById(id));
       const statusText = document.getElementById('statusText');
       const attemptsEl = document.getElementById('attempts');
