@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Eeza Protocol — Gong Enterprises</title>
+  <style>
+    :root{--card:#0f1724;--accent:#7dd3fc;--success:#22c55e;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body {
+  margin: 0;
+  color: #e6eef8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: background 2s ease;
+  background-image: url('C:\Users\asmathfamnaz\OneDrive - uowdubai.ac.ae\UOWD\AUTUMN 2025\Halloween-Cyber awareness\background.png');
+  background-size: cover;
+}
+
+
+
+    @keyframes ghostMove{0%{transform:translateX(0)}50%{transform:translateX(30px)}100%{transform:translateX(0)}}
+
+    .wrap{width:100%;max-width:920px;position:relative;z-index:2; transition:opacity 1s ease}
+    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;color:#022;background:#fff;font-weight:700}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 18px;color:#b8d7ff}
+
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:22px;border-radius:12px;backdrop-filter: blur(6px);transition:opacity 1s ease}
+    form.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;font-size:12px;color:#9fc7ff;margin-bottom:6px}
+    input[type=text]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:var(--glass);color:inherit;font-size:14px}
+    .full{grid-column:1/-1}
+    .actions{display:flex;gap:8px;align-items:center;margin-top:12px}
+    button{padding:10px 14px;border-radius:10px;border:0;font-weight:600;cursor:pointer}
+    button.primary{background:linear-gradient(90deg,#4ade80,#16a34a);color:#022}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit}
+    .muted{color:#9fbbe6;font-size:13px}
+
+    .status{margin-top:14px;padding:10px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:10px}
+    .ok{color:#7ee787;font-weight:700}
+    .err{color:#ff9e9e;font-weight:700}
+
+.virus-banner {
+  position: fixed;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%, -50%);
+  padding: 30px 60px;
+  border-radius: 20px;
+  z-index: 9999;
+  font-weight: 900;
+
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  background: none;
+  color: #b8ffb2;
+  text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
+  display: none;
+  animation: flickerMove 1.6s infinite;
+}
+
+    .virus-banner.show{display:block}
+    @keyframes flickerMove{
+      0%{opacity:1;transform:translateX(-50%) translateY(0)}
+      25%{opacity:0.8;transform:translateX(-50%) translateY(-8px)}
+      50%{opacity:1;transform:translateX(-50%) translateY(4px)}
+      75%{opacity:0.85;transform:translateX(-50%) translateY(-4px)}
+      100%{opacity:1;transform:translateX(-50%) translateY(0)}
+    }
+
+    .success{animation:pop .35s ease forwards}
+    @keyframes pop{0%{transform:scale(.98)}100%{transform:scale(1)}}
+
+    footer{margin-top:12px;color:#90baf2;font-size:13px}
+    @media (max-width:640px){form.grid{grid-template-columns:1fr} .logo{width:48px;height:48px}}
+  </style>
+</head>
+<body>
+  
+  <div class="wrap"><div id="timerDisplay" style="
+  position: fixed;
+  top: 10px;
+  right: 30px;
+  font-size: 24px;
+  color: #ff6b6b;
+  font-weight: bold;
+  text-shadow: 0 0 10px #ff0000;
+  z-index: 9999;
+">Time Left: 10:00</div>
+
+    <header>
+     
+      <div>
+        <h1>The Eeza Protocol — Gong Enterprises</h1>
+        <p class="lead">The city’s network is compromised. Five secrets hold the key. Enter them before the virus consumes everything. The haunted systems are watching…</p>
+      </div>
+    </header>
+
+    <div class="card" role="region" aria-labelledby="portalTitle">
+      <h2 id="portalTitle" style="margin-top:0">Cyber Shutdown Console</h2>
+      <p class="muted">
+Decrypt the five secrets from the haunted network....Every second counts...</p>
+
+      <form id="finalForm" class="grid" autocomplete="off" onsubmit="return false">
+        <div>
+          <label for="in1">Secret 1</label>
+          <input id="in1" type="text" maxlength="20" placeholder="Type the first secret" required />
+        </div>
+        <div>
+          <label for="in2">Secret 2</label>
+          <input id="in2" type="text" maxlength="20" placeholder="Type the second secret" required />
+        </div>
+        <div>
+          <label for="in3">Secret 3 </label>
+          <input id="in3" type="text" maxlength="20" placeholder="Type the third secret" required />
+        </div>
+        <div>
+          <label for="in4">Secret 4 </label>
+          <input id="in4" type="text" maxlength="10" placeholder="Type the fourth secret" required />
+        </div>
+        <div class="full">
+          <label for="in5">Secret 5 </label>
+          <input id="in5" type="text" maxlength="20" placeholder="Type the fifth secret" required />
+        </div>
+        <div class="full actions">
+          <button id="checkBtn" class="primary" type="button">Validate Secrets</button>
+          <button id="clearBtn" class="ghost" type="button">Clear</button>
+          <div style="flex:1"></div>
+          <div class="muted">Attempts: <span id="attempts">0</span></div>
+        </div>
+        <div id="status" class="full status" aria-live="polite">
+          <div id="statusText">Awaiting input...</div>
+        </div>
+      </form>
+          </div>
+  </div>
+
+  <div id="virus" class="virus-banner" role="alert" aria-hidden="true"><p style="font-size:80px;">VIRUS CLEARED</p><br> <p style="font-size:30px;">Gong Enterprises Secure</p></div>
+
+  <audio id="bgSound" loop autoplay><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+
+  <script>
+    (function(){
+      const EXPECTED = ["KEY","TRUST","SIMPLE","451","TIME"];
+      const inps = ["in1","in2","in3","in4","in5"].map(id=>document.getElementById(id));
+      const statusText = document.getElementById('statusText');
+      const attemptsEl = document.getElementById('attempts');
+      const virus = document.getElementById('virus');
+      const wrap = document.querySelector('.wrap');
+      let attempts = 0;
+// ---- Countdown Timer ----
+let timeLeft = 10 * 60; // 10 minutes in seconds
+const timerDisplay = document.getElementById('timerDisplay');
+
+function updateTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  timerDisplay.textContent = `Time Left: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+  if (timeLeft <= 0) {
+    clearInterval(timerInterval);
+    timerDisplay.textContent = '⛔ Time Over! The network is lost...';
+    timerDisplay.style.color = '#ff0000';
+    document.body.style.background = 'linear-gradient(180deg, #3a0000 0%, #8b0000 100%)';
+
+    // Optional: disable form when time runs out
+    document.querySelectorAll('input, button').forEach(el => el.disabled = true);
+    document.body.style.background = 'radial-gradient(circle, #2b0000 0%, #000 100%)';
+  } else {
+    timeLeft--;
+  }
+}
+
+const timerInterval = setInterval(updateTimer, 1000);
+updateTimer();
+
+
+      function normalize(v){ return (v||'').toString().trim(); }
+
+      function checkAll(){
+        attempts++;
+        attemptsEl.textContent = attempts;
+        const entered = inps.map(i=>normalize(i.value));
+        const feedback = [];
+        let allMatch = true;
+        for(let i=0;i<EXPECTED.length;i++){
+          const exp = EXPECTED[i];
+          const val = entered[i];
+          if(exp === '451'){
+            if(val === exp){ feedback.push(true);} else { feedback.push(false); allMatch=false; }
+          } else {
+            if(val.toUpperCase() === exp){ feedback.push(true);} else { feedback.push(false); allMatch=false; }
+          }
+        }
+
+        if(allMatch){
+          statusText.innerHTML = '<span class="ok">All secrets validated. Virus successfully cleared!</span>';
+          showVirusCleared();
+        } else {
+          const fields = ['Secret 1','Secret 2','Secret 3','Secret 4','Secret 5'];
+          const wrong = fields.filter((f,i)=>!feedback[i]);
+          statusText.innerHTML = '<span class="err">Validation failed. Incorrect: ' + wrong.join(', ') + '.</span>';
+          flashInvalidFields(feedback);
+        }
+      }
+
+      function flashInvalidFields(feedback){
+        for(let i=0;i<feedback.length;i++){
+          const el = inps[i];
+          el.style.transition='border-color .15s, box-shadow .15s';
+          if(!feedback[i]){
+            el.style.borderColor='rgba(255,77,79,0.9)';
+            el.style.boxShadow='0 0 10px rgba(255,77,79,0.07)';
+            setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; },900);
+          }
+        }
+      }
+
+     function showVirusCleared() {
+  // show flickering banner
+  virus.classList.add('show');
+  virus.setAttribute('aria-hidden', 'false');
+
+  // fade out form
+  const formCard = document.querySelector('.card');
+  const wrapper = document.querySelector('.wrap');
+
+  if (formCard) {
+    formCard.style.transition = 'opacity 1s ease';
+    formCard.style.opacity = '0';
+    setTimeout(() => formCard.remove(), 1000);
+  }
+  if (wrapper) {
+    wrapper.style.transition = 'opacity 1s ease';
+    wrapper.style.opacity = '0';
+    setTimeout(() => wrapper.remove(), 1500);
+  }
+
+  // change to full green background
+  document.body.style.background = 'linear-gradient(180deg, #052b10 0%, #0a4618 100%)';
+}
+
+
+      document.getElementById('checkBtn').addEventListener('click',checkAll);
+      document.getElementById('clearBtn').addEventListener('click',()=>{ inps.forEach(i=>i.value=''); statusText.textContent='Awaiting input...'; attempts=0; attemptsEl.textContent='0'; virus.className='virus-banner'; virus.setAttribute('aria-hidden','true'); wrap.style.opacity='1'; document.body.style.background='#0b0f1f url(https://i.imgur.com/3YH0KJf.gif) center/cover no-repeat'; document.querySelector('.ghost-overlay').style.opacity='0.15'; inps.forEach(i=>i.removeAttribute('disabled')); document.getElementById('checkBtn').removeAttribute('disabled'); });
+      inps.forEach(inp=>inp.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); checkAll(); } }));
+    })();
+  </script>
+</body>
+</html>
