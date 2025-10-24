@@ -192,25 +192,26 @@ function checkAll() {
   attempts++;
   attemptsEl.textContent = attempts;
 
-const entered = inps.map(i => normalize(i.value));
-
+  const entered = inps.map(i => normalize(i.value).toUpperCase());
   let matchFound = false;
   let feedback = new Array(inps.length).fill(false);
 
-  // Check each valid set
   for (const set of VALID_SETS) {
+    const setUpper = set.map(v => v.toUpperCase()); // normalize valid sets too
     let setMatches = true;
-    for (let i = 0; i < set.length; i++) {
-      if (entered[i] === set[i]) {
+
+    for (let i = 0; i < setUpper.length; i++) {
+      if (entered[i] === setUpper[i]) {
         feedback[i] = true;
       } else {
         setMatches = false;
         feedback[i] = false;
       }
     }
+
     if (setMatches) {
       matchFound = true;
-      break; // stop at first matching set
+      break;
     }
   }
 
