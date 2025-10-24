@@ -145,13 +145,24 @@ Decrypt the five secrets from the haunted network....Every second counts...</p>
   <script>
    
     (function(){
-      const VALID_SETS = [
-  ["SECRET","PHISH","443","FILE"], // Group 1 — The Phantom Packet
-["TEST","Pa$$word!","PRIVATE","ESCAPE2025"], // Group 2 — Operation Darkline
-["CYBER","STRONGPASS","CYBERNET","SIMPLE"], // Group 3 — The Shadow Key
-["FILE","443","TEST","Pa$$word!"], // Group 4 — Project Zenix
-["SECRET","ESCAPE2025","CYBERNET","AES256"], // Group 5 — The Web Intrusion
-["STRONGPASS","CYBER","443","PHISH"] // Group 6 — Operation Red Firewall
+const VALID_SETS = [
+  // Group 1 — The Phantom Packet
+  ["SECRET","PHISH","443","FILE"],
+
+  // Group 2 — Operation Darkline
+  ["TEST","Pa$$word!","PRIVATE","ESCAPE2025"],
+
+  // Group 3 — The Shadow Key
+  ["CYBER","STRONGPASS","CYBERNET","SIMPLE"],
+
+  // Group 4 — Project Zenix
+  ["FILE","443","TEST","Pa$$word!"],
+
+  // Group 5 — The Web Intrusion
+  ["SECRET","ESCAPE2025","CYBERNET","AES256"],
+
+  // Group 6 — Operation Red Firewall
+  ["STRONGPASS","CYBER","443","PHISH"]
 ];
 
       const inps = ["in1","in2","in3","in4"].map(id=>document.getElementById(id));
