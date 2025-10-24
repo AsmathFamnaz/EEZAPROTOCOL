@@ -217,7 +217,7 @@ function checkAll() {
     statusText.innerHTML = '<span class="ok">All secrets validated. Virus successfully cleared!</span>';
     showVirusCleared();
   } else {
-    const fields = ['Secret 1','Secret 2','Secret 3','Secret 4','Secret 5'];
+    const fields = ['Secret 1','Secret 2','Secret 3','Secret 4'];
     const wrong = fields.filter((f, i) => !feedback[i]);
     statusText.innerHTML = '<span class="err">Validation failed. Incorrect: ' + wrong.join(', ') + '.</span>';
     flashInvalidFields(feedback);
