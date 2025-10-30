@@ -123,6 +123,7 @@
 
   let timeLeft = 15*60;
   let timer = null;
+  let groupKey = null;
 
   function formatTime(t) {
     const m = Math.floor(t/60), s = t%60;
@@ -134,10 +135,12 @@
   }
 
   function startCountdown() {
+    if (!groupKey) return alert("Select a group first!");
     if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (timeLeft > 0) {
         timeLeft--;
+        saveTimer();
         updateTimerDisplay();
       } else {
         clearInterval(timer);
@@ -146,11 +149,28 @@
     }, 1000);
   }
 
+  function saveTimer() {
+    if (!groupKey) return;
+    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+    data.remaining = timeLeft;
+    data.started = true;
+    localStorage.setItem(groupKey, JSON.stringify(data));
+  }
+
   startBtn.addEventListener('click', () => {
     if (!groupSelect.value) return alert("Select a group first!");
-    timeLeft = 15*60; // reset timer on start
+    groupKey = `group_${groupSelect.value}_timer`;
+    const saved = JSON.parse(localStorage.getItem(groupKey));
+    timeLeft = saved?.remaining ?? 15*60;
     updateTimerDisplay();
     startCountdown();
+  });
+
+  groupSelect.addEventListener('change', () => {
+    groupKey = `group_${groupSelect.value}_timer`;
+    const saved = JSON.parse(localStorage.getItem(groupKey));
+    timeLeft = saved?.remaining ?? 15*60;
+    updateTimerDisplay();
   });
 
   document.getElementById('checkBtn').addEventListener('click', () => {
@@ -160,32 +180,32 @@
       clearInterval(timer);
       virus.classList.add('show');
 
-      const dataToSend = {
-        group: groupSelect.value,
-        timeTaken: 15*60 - timeLeft,
-        validatedAt: new Date().toISOString()
-      };
+      const key = `group_${groupSelect.value}_timer`;
+      const data = JSON.parse(localStorage.getItem(key)) || {};
+      data.stopped = true;
+      data.validated = true;
+      data.timeTaken = 15*60 - timeLeft; // record time taken
+      data.validatedAt = new Date().toLocaleTimeString();
+      localStorage.setItem(key, JSON.stringify(data));
 
-      // POST to server endpoint
-      fetch('https://asmathfamnaz.github.io/EEZAPROTOCOL/results.html', { // replace with your endpoint
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dataToSend)
-      })
-      .then(res => {
-        if(res.ok) alert(`✅ Group ${groupSelect.value} validated! Time sent to server.`);
-        else alert(`❌ Server error!`);
-      })
-      .catch(err => {
-        console.error(err);
-        alert("❌ Network error! Could not send data.");
-      });
-
+      alert(`✅ Group ${groupSelect.value} validated! Time taken: ${formatTime(data.timeTaken)}`);
     } else {
       alert("❌ Incorrect code!");
     }
   });
 
+  // Auto-resume timer on reload if started and not stopped
+  window.addEventListener('load', () => {
+    if (groupSelect.value) {
+      groupKey = `group_${groupSelect.value}_timer`;
+      const saved = JSON.parse(localStorage.getItem(groupKey));
+      if (saved?.started && !saved.stopped) {
+        timeLeft = saved.remaining ?? 15*60;
+        startCountdown();
+      }
+      updateTimerDisplay();
+    }
+  });
 })();
 </script>
 </body>
