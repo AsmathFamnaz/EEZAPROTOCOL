@@ -168,6 +168,8 @@
 </style>
 </head>
 <body>
+  <audio id="beepAudio" src="beep.mp3" preload="auto"></audio>
+
   <div class="card" id="mainCard">
     <div id="timerDisplay">Time Left: 15:00</div>
     <h3>THE FINAL GATE</h3>
@@ -253,20 +255,30 @@
   }
 
   function startCountdown() {
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      if (timeLeft > 0) {
-        timeLeft--;
-        saveTimer();
-        updateTimerDisplay();
-      } else {
-        clearInterval(timer);
-        timer = null;
-        mainCard.style.display = 'none';
-        timeUpBanner.classList.add('show');
+  const beep = document.getElementById('beepAudio');
+
+  if (timer) clearInterval(timer);
+  timer = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--;
+      saveTimer();
+      updateTimerDisplay();
+
+      // Play beep in the last 10 seconds
+      if (timeLeft <= 10) {
+        beep.currentTime = 0;
+        beep.play();
       }
-    }, 1000);
-  }
+
+    } else {
+      clearInterval(timer);
+      timer = null;
+      mainCard.style.display = 'none';
+      timeUpBanner.classList.add('show');
+    }
+  }, 1000);
+}
+
 
   function refreshControls() {
     startBtn.disabled = !groupSelect.value;
