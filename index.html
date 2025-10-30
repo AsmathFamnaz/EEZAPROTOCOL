@@ -3,114 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The Eeza Protocol — Gong Enterprises</title>
+<title>The Final Gate — EEZA Protocol</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+
   body {
     margin: 0;
-    color: #e6eef8;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('background.png');
-    background-size: cover;
-    padding: 24px;
-    font-family: Inter, sans-serif;
+    background: url('background.png') center/cover no-repeat;
+    font-family: 'Inter', sans-serif;
+    color: #e6eef8;
+    overflow: hidden;
   }
-  .wrap {
-    width: 100%;
-    max-width: 920px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
+
+  /* Subtle glass card effect */
   .card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);
-    padding:22px;
-    border-radius:12px;
-    backdrop-filter: blur(6px);
-    width: 100%;
-    max-width: 500px;
+    background: rgba(15, 23, 36, 0.7);
+    border: 1px solid rgba(125, 211, 252, 0.2);
+    box-shadow: 0 0 30px rgba(125, 211, 252, 0.2);
+    padding: 32px 40px;
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
     text-align: center;
+    max-width: 480px;
+    width: 90%;
+    animation: fadeIn 2s ease;
   }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h3 {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 2px;
+    color: #7dd3fc;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #38bdf8;
+  }
+
   #timerDisplay {
-    font-size: 24px;
-    color: #ff6b6b;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
     font-weight: bold;
-    text-shadow: 0 0 10px #ff0000;
+    color: #ff6b6b;
+    text-shadow: 0 0 12px #ff0000;
     margin-bottom: 20px;
   }
-  .virus-banner {
-    position: fixed;
-    left: 50%;
-    top: 5%;
-    transform: translate(-50%, -50%);
-    padding: 30px 60px;
-    border-radius: 20px;
-    z-index: 9999;
-    font-weight: 900;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    text-align: center;
-    background: none;
-    color: #b8ffb2;
-    text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
-    display: none;
-    animation: flickerMove 1.6s infinite;
+
+  label {
+    font-weight: 600;
+    color: #aee0ff;
   }
-  .virus-banner.show { display: block; }
-  @keyframes flickerMove {
-    0% { opacity:1; transform:translateX(-50%) translateY(0) }
-    25% { opacity:0.8; transform:translateX(-50%) translateY(-8px) }
-    50% { opacity:1; transform:translateX(-50%) translateY(4px) }
-    75% { opacity:0.85; transform:translateX(-50%) translateY(-4px) }
-    100% { opacity:1; transform:translateX(-50%) translateY(0) }
+
+  select, input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.1);
+    color: #e6eef8;
+    font-size: 15px;
+    margin-top: 6px;
+    margin-bottom: 14px;
+    outline: none;
+    transition: 0.3s;
   }
+
+  select:focus, input:focus {
+    border-color: #7dd3fc;
+    box-shadow: 0 0 8px #38bdf8;
+  }
+
   button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin-top: 8px;
+    padding: 12px 22px;
+    font-size: 15px;
     border: none;
     border-radius: 8px;
-    background: #7dd3fc;
+    background: linear-gradient(90deg, #38bdf8, #7dd3fc);
     color: #0f1724;
     cursor: pointer;
     font-weight: bold;
-    margin-right: 10px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
   }
-  button:hover { background: #38bdf8; }
-  select, input { padding: 8px; width: 80%; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc; }
+
+  button:hover {
+    background: linear-gradient(90deg, #7dd3fc, #38bdf8);
+    box-shadow: 0 0 15px #38bdf8;
+    transform: scale(1.05);
+  }
+
+  /* ACCESS GRANTED animation */
+  .virus-banner {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: none;
+    color: #b8ffb2;
+    text-shadow: 0 0 20px #00ff66, 0 0 50px #00ff66;
+    display: none;
+    animation: flickerMove 1.4s infinite;
+    z-index: 1000;
+  }
+
+  .virus-banner.show { display: block; }
+
+  @keyframes flickerMove {
+    0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.7; transform: translate(-50%, -52%) scale(1.02); }
+  }
+
 </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="card">
     <div id="timerDisplay">Time Left: 15:00</div>
-    <div class="card">
-      <h3>THE FINAL GATE</h3>
-      <form id="finalForm" autocomplete="off" onsubmit="return false">
-        <label>Select Group</label><br>
-        <select id="groupSelect">
-          <option value="">-- Choose Group --</option>
-          <option value="1">Group 1</option>
-          <option value="2">Group 2</option>
-          <option value="3">Group 3</option>
-          <option value="4">Group 4</option>
-          <option value="5">Group 5</option>
-          <option value="6">Group 6</option>
-        </select><br>
-        <button id="startBtn" type="button" width="50px;">Start Timer</button>
-        <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required /><br>
-        
-        <button id="checkBtn" type="button">Validate Code</button>
-      </form>
-    </div>
+    <h3>THE FINAL GATE</h3>
+    <form id="finalForm" autocomplete="off" onsubmit="return false">
+      <label>Select Group</label><br>
+      <select id="groupSelect">
+        <option value="">-- Choose Group --</option>
+        <option value="1">Group 1</option>
+        <option value="2">Group 2</option>
+        <option value="3">Group 3</option>
+        <option value="4">Group 4</option>
+        <option value="5">Group 5</option>
+        <option value="6">Group 6</option>
+      </select><br>
+      <button id="startBtn" type="button">Start Timer</button><br>
+      <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required /><br>
+      <button id="checkBtn" type="button">Validate Code</button>
+    </form>
   </div>
 
   <div id="virus" class="virus-banner">
     <p style="font-size:80px;">ACCESS GRANTED</p>
-    <br><p style="font-size:30px;">Network Restored</p>
+    <p style="font-size:28px;">Network Restored</p>
   </div>
 
 <script>
@@ -152,67 +193,4 @@
 
   function saveTimer() {
     if (!groupKey) return;
-    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
-    data.remaining = timeLeft;
-    data.started = true;
-    localStorage.setItem(groupKey, JSON.stringify(data));
-  }
-
-  startBtn.addEventListener('click', () => {
-    if (!groupSelect.value) return alert("Select a group first!");
-    groupKey = `group_${groupSelect.value}_timer`;
-    const saved = JSON.parse(localStorage.getItem(groupKey));
-    timeLeft = saved?.remaining ?? 15*60;
-    updateTimerDisplay();
-    startCountdown();
-  });
-
-  groupSelect.addEventListener('change', () => {
-    groupKey = `group_${groupSelect.value}_timer`;
-    const saved = JSON.parse(localStorage.getItem(groupKey));
-    timeLeft = saved?.remaining ?? 15*60;
-    updateTimerDisplay();
-  });
-
- document.getElementById('checkBtn').addEventListener('click', () => {
-  if (!groupSelect.value) return;
-
-  const code = secretCode.value.trim().toUpperCase();
-  if (code === VALID_CODES[groupSelect.value]) {
-    clearInterval(timer);
-    virus.classList.add('show');   // show only the banner
-    secretCode.value = '';         // clear input
-    groupSelect.disabled = true;   // prevent further edits
-    startBtn.disabled = true;      // prevent restarting
-
-    // Save validation and time taken
-    const key = `group_${groupSelect.value}_timer`;
-    const data = JSON.parse(localStorage.getItem(key)) || {};
-    data.stopped = true;
-    data.validated = true;
-    data.timeTaken = 15*60 - timeLeft;
-    data.validatedAt = new Date().toLocaleTimeString();
-    localStorage.setItem(key, JSON.stringify(data));
-
-  } else {
-    secretCode.value = '';   // clear wrong input
-  }
-});
-
-
-  // Auto-resume timer on reload if started and not stopped
-  window.addEventListener('load', () => {
-    if (groupSelect.value) {
-      groupKey = `group_${groupSelect.value}_timer`;
-      const saved = JSON.parse(localStorage.getItem(groupKey));
-      if (saved?.started && !saved.stopped) {
-        timeLeft = saved.remaining ?? 15*60;
-        startCountdown();
-      }
-      updateTimerDisplay();
-    }
-  });
-})();
-</script>
-</body>
-</html>
+    const data = JSON.parse(localStora
