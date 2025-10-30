@@ -1,229 +1,146 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>The Eeza Protocol — Gong Enterprises</title>
-  <style>
-    :root {
-      --card:#0f1724;--accent:#7dd3fc;--success:#22c55e;--glass:rgba(255,255,255,0.03)
-    }
-    * {box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body {
-      margin: 0;
-      color: #e6eef8;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      transition: background 2s ease;
-      background-image: url('background.png');
-      background-size: cover;
-    }
-
-    .wrap{width:100%;max-width:920px;position:relative;z-index:2; transition:opacity 1s ease}
-    header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    h1{margin:0;font-size:20px}
-    p.lead{margin:6px 0 18px;color:#b8d7ff}
-
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:22px;border-radius:12px;backdrop-filter: blur(6px);transition:opacity 1s ease}
-    form.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    label{display:block;font-size:12px;color:#9fc7ff;margin-bottom:6px}
-    select, input[type=text]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:var(--glass);color:inherit;font-size:14px}
-    .full{grid-column:1/-1}
-    .actions{display:flex;gap:8px;align-items:center;margin-top:12px}
-    button{padding:10px 14px;border-radius:10px;border:0;font-weight:600;cursor:pointer}
-    button.primary{background:linear-gradient(90deg,#4ade80,#16a34a);color:#022}
-    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit}
-    .muted{color:#9fbbe6;font-size:13px}
-    .status{margin-top:14px;padding:10px;border-radius:8px;background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;gap:10px}
-    .ok{color:#7ee787;font-weight:700}
-    .err{color:#ff9e9e;font-weight:700}
-
-    .virus-banner {
-      position: fixed;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      padding: 30px 60px;
-      border-radius: 20px;
-      z-index: 9999;
-      font-weight: 900;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      text-align: center;
-      background: none;
-      color: #b8ffb2;
-      text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
-      display: none;
-      animation: flickerMove 1.6s infinite;
-    }
-    .virus-banner.show{display:block}
-    @keyframes flickerMove {
-      0%{opacity:1;transform:translate(-50%, -50%) translateY(0)}
-      25%{opacity:0.8;transform:translate(-50%, -50%) translateY(-8px)}
-      50%{opacity:1;transform:translate(-50%, -50%) translateY(4px)}
-      75%{opacity:0.85;transform:translate(-50%, -50%) translateY(-4px)}
-      100%{opacity:1;transform:translate(-50%, -50%) translateY(0)}
-    }
-
-    /* 🌑 BLACKOUT OVERLAY */
-    #blackout {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0);
-      z-index: 9998;
-      pointer-events: none;
-      transition: background 1.2s ease;
-    }
-    #blackout.active {
-      background: rgba(0, 0, 0, 1);
-    }
-
-    footer{margin-top:12px;color:#90baf2;font-size:13px}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Group Console — Eeza Protocol</title>
+<style>
+body {
+  background: #000;
+  color: #b8d7ff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding-top: 80px;
+}
+#timer {
+  font-size: 60px;
+  margin-top: 20px;
+  color: #ff6b6b;
+  text-shadow: 0 0 10px #ff0000;
+}
+.virus-banner {
+  display: none;
+  font-size: 40px;
+  color: #00ff88;
+  text-shadow: 0 0 15px #00ff66;
+}
+.virus-banner.show { display: block; }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div id="timerDisplay" style="
-      position: fixed;top: 10px;right: 30px;font-size: 24px;
-      color: #ff6b6b;font-weight: bold;text-shadow: 0 0 10px #ff0000;
-      z-index: 9999;">Time Left: 10:00</div>
 
-    <header>
-      <div>
-        <h1>The Eeza Protocol — Gong Enterprises</h1>
-        <p class="lead">Select your group and enter the final numerical code. Only one combination will save the system...</p>
-      </div>
-    </header>
+<h1>Group Validation Console</h1>
 
-    <div class="card">
-      <h2 style="margin-top:0">Final Group Validation Console</h2>
-      <form id="finalForm" class="grid" autocomplete="off" onsubmit="return false">
-        <div>
-          <label for="groupSelect">Select Group</label>
-          <select id="groupSelect" required>
-            <option value="">-- Choose Group --</option>
-            <option value="1">Group 1 </option>
-            <option value="2">Group 2 </option>
-            <option value="3">Group 3 </option>
-            <option value="4">Group 4 </option>
-            <option value="5">Group 5 </option>
-            <option value="6">Group 6 </option>
-          </select>
-        </div>
+<label>Group Number:
+  <select id="groupSelect">
+    <option value="">Select Group</option>
+    <option value="1">Group 1</option>
+    <option value="2">Group 2</option>
+    <option value="3">Group 3</option>
+    <option value="4">Group 4</option>
+    <option value="5">Group 5</option>
+    <option value="6">Group 6</option>
+  </select>
+</label>
 
-        <div>
-          <label for="secretCode">Enter Final Code</label>
-          <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required />
-        </div>
+<div id="timer">15:00</div>
 
-        <div class="full actions">
-          <button id="checkBtn" class="primary" type="button">Validate Code</button>
-          <button id="clearBtn" class="ghost" type="button">Clear</button>
-          <div style="flex:1"></div>
-          <div class="muted">Attempts: <span id="attempts">0</span></div>
-        </div>
-        <div id="status" class="full status"><div id="statusText">Awaiting input...</div></div>
-      </form>
-    </div>
-  </div>
+<div style="margin-top:30px;">
+  <input id="secretCode" placeholder="Enter Final Code">
+  <button id="validateBtn">Validate</button>
+</div>
 
-  <div id="virus" class="virus-banner">
-    <p style="font-size:80px;">ACCESS GRANTED</p><br>
-    <p style="font-size:30px;">Network Restored</p>
-  </div>
+<div id="virus" class="virus-banner">ACCESS GRANTED<br>Network Restored</div>
 
-  <!-- 🌑 Blackout overlay -->
-  <div id="blackout"></div>
+<script>
+(() => {
+  const VALID_CODES = {
+    1: "CRYPTO",
+    2: "SECRET",
+    3: "OMEGA9",
+    4: "ZENIX42",
+    5: "SPY2025",
+    6: "REDWALL"
+  };
 
-  <script>
-  (function(){
-    const VALID_CODES = {
-      1: "CRYPTO",
-      2: "SECRET",
-      3: "OMEGA9",
-      4: "ZENIX42",
-      5: "SPY2025",
-      6: "REDWALL"
-    };
+  const groupSelect = document.getElementById('groupSelect');
+  const secretCode = document.getElementById('secretCode');
+  const virus = document.getElementById('virus');
+  const timerDisplay = document.getElementById('timer');
 
-    const groupSelect = document.getElementById('groupSelect');
-    const secretCode = document.getElementById('secretCode');
-    const statusText = document.getElementById('statusText');
-    const attemptsEl = document.getElementById('attempts');
-    const virus = document.getElementById('virus');
-    const blackout = document.getElementById('blackout');
-    let attempts = 0;
+  let interval = null;
+  let groupKey = null;
+  let remaining = 0;
+  const TOTAL = 15 * 60; // 15 min in seconds
 
-    // ---- Timer ----
-    let timeLeft = 10 * 60;
-    const timerDisplay = document.getElementById('timerDisplay');
-    function updateTimer() {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      timerDisplay.textContent = `Time Left: ${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-      if (timeLeft <= 0) {
-        clearInterval(timerInterval);
-        timerDisplay.textContent = '⛔ Time Over!';
-        document.querySelectorAll('input, select, button').forEach(e => e.disabled = true);
-        document.body.style.background = 'radial-gradient(circle, #2b0000 0%, #000 100%)';
-      } else timeLeft--;
-    }
-    const timerInterval = setInterval(updateTimer, 1000);
-    updateTimer();
+  // Update display
+  function updateDisplay() {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
 
-    // ---- Validation ----
-    function checkCode() {
-      attempts++;
-      attemptsEl.textContent = attempts;
+  // Load timer if existing
+  function loadTimer() {
+    if (!groupKey) return;
+    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+    remaining = data.remaining ?? TOTAL;
+    if (data.started && !data.stopped) startCountdown();
+    updateDisplay();
+  }
 
-      const groupVal = groupSelect.value;
-      const codeVal = secretCode.value.trim().toUpperCase();
-
-      if (!groupVal) {
-        statusText.innerHTML = '<span class="err">Select a group first.</span>';
-        return;
-      }
-      const validCode = VALID_CODES[groupVal];
-      if (codeVal === validCode.toUpperCase()) {
-        statusText.innerHTML = '<span class="ok">Validation successful! Code accepted.</span>';
-        showVirusCleared();
+  function startCountdown() {
+    if (interval) clearInterval(interval);
+    interval = setInterval(() => {
+      if (remaining > 0) {
+        remaining--;
+        updateDisplay();
+        const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+        data.remaining = remaining;
+        localStorage.setItem(groupKey, JSON.stringify(data));
       } else {
-        statusText.innerHTML = '<span class="err">Incorrect code for this group.</span>';
-        secretCode.style.borderColor = 'rgba(255,77,79,0.9)';
-        setTimeout(()=>secretCode.style.borderColor='',900);
+        clearInterval(interval);
+        alert('⛔ Time Over!');
       }
-    }
+    }, 1000);
+  }
 
-    function showVirusCleared() {
-      blackout.classList.add('active'); // 🌑 Fade everything to black
+  // React to controller commands
+  window.addEventListener('storage', e => {
+    if (e.key === groupKey && e.newValue) {
+      const data = JSON.parse(e.newValue);
+      if (data.started && !data.stopped && !interval) {
+        remaining = data.remaining ?? TOTAL;
+        startCountdown();
+      }
+      if (data.stopped) clearInterval(interval);
+    }
+  });
+
+  // Validation success
+  document.getElementById('validateBtn').addEventListener('click', () => {
+    const g = groupSelect.value;
+    const code = secretCode.value.trim().toUpperCase();
+    if (!g) return alert("Select group first.");
+    if (code === VALID_CODES[g]) {
+      clearInterval(interval);
       virus.classList.add('show');
-      virus.setAttribute('aria-hidden', 'false');
-
-      document.querySelector('.card').style.opacity = '0';
-      setTimeout(() => document.querySelector('.card').remove(), 1000);
+      const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+      data.stopped = true;
+      data.validated = true;
+      data.validatedAt = new Date().toLocaleTimeString();
+      localStorage.setItem(groupKey, JSON.stringify(data));
+      alert(`✅ Group ${g} validated!`);
+    } else {
+      alert("❌ Wrong code!");
     }
+  });
 
-    document.getElementById('checkBtn').addEventListener('click', checkCode);
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      groupSelect.value = '';
-      secretCode.value = '';
-      attempts = 0;
-      attemptsEl.textContent = '0';
-      statusText.textContent = 'Awaiting input...';
-      virus.classList.remove('show');
-      blackout.classList.remove('active');
-    });
-
-    secretCode.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        checkCode();
-      }
-    });
-  })();
-  </script>
+  groupSelect.addEventListener('change', () => {
+    groupKey = `group_${groupSelect.value}_timer`;
+    loadTimer();
+  });
+})();
+</script>
 </body>
 </html>
