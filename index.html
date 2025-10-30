@@ -3,142 +3,168 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Group Console — Eeza Protocol</title>
+<title>The Eeza Protocol — Gong Enterprises</title>
 <style>
-body {
-  background: #000;
-  color: #b8d7ff;
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding-top: 80px;
-}
-#timer {
-  font-size: 60px;
-  margin-top: 20px;
-  color: #ff6b6b;
-  text-shadow: 0 0 10px #ff0000;
-}
-.virus-banner {
-  display: none;
-  font-size: 40px;
-  color: #00ff88;
-  text-shadow: 0 0 15px #00ff66;
-}
-.virus-banner.show { display: block; }
+  :root {
+    --card:#0f1724;--accent:#7dd3fc;--success:#22c55e;--glass:rgba(255,255,255,0.03)
+  }
+  * {box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+  body {
+    margin: 0;
+    color: #e6eef8;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: background 2s ease;
+    background-image: url('background.png');
+    background-size: cover;
+  }
+  .wrap{width:100%;max-width:920px;position:relative;z-index:2; transition:opacity 1s ease}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:22px;border-radius:12px;backdrop-filter: blur(6px);transition:opacity 1s ease}
+  .virus-banner {
+    position: fixed;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%, -50%);
+    padding: 30px 60px;
+    border-radius: 20px;
+    z-index: 9999;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    background: none;
+    color: #b8ffb2;
+    text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
+    display: none;
+    animation: flickerMove 1.6s infinite;
+  }
+  .virus-banner.show{display:block}
+  @keyframes flickerMove {
+    0%{opacity:1;transform:translateX(-50%) translateY(0)}
+    25%{opacity:0.8;transform:translateX(-50%) translateY(-8px)}
+    50%{opacity:1;transform:translateX(-50%) translateY(4px)}
+    75%{opacity:0.85;transform:translateX(-50%) translateY(-4px)}
+    100%{opacity:1;transform:translateX(-50%) translateY(0)}
+  }
 </style>
 </head>
 <body>
+  <div class="wrap">
+    <div id="timerDisplay" style="
+      position: fixed;top: 10px;right: 30px;font-size: 24px;
+      color: #ff6b6b;font-weight: bold;text-shadow: 0 0 10px #ff0000;
+      z-index: 9999;">Time Left: 15:00</div>
 
-<h1>Group Validation Console</h1>
+    <div class="card">
+      <h2>Final Group Validation Console</h2>
+      <form id="finalForm" class="grid" autocomplete="off" onsubmit="return false">
+        <label>Select Group</label>
+        <select id="groupSelect">
+          <option value="">-- Choose Group --</option>
+          <option value="1">Group 1</option>
+          <option value="2">Group 2</option>
+          <option value="3">Group 3</option>
+          <option value="4">Group 4</option>
+          <option value="5">Group 5</option>
+          <option value="6">Group 6</option>
+        </select><br><br>
 
-<label>Group Number:
-  <select id="groupSelect">
-    <option value="">Select Group</option>
-    <option value="1">Group 1</option>
-    <option value="2">Group 2</option>
-    <option value="3">Group 3</option>
-    <option value="4">Group 4</option>
-    <option value="5">Group 5</option>
-    <option value="6">Group 6</option>
-  </select>
-</label>
+        <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required />
+        <button id="checkBtn" type="button">Validate Code</button>
+      </form>
+    </div>
+  </div>
 
-<div id="timer">15:00</div>
-
-<div style="margin-top:30px;">
-  <input id="secretCode" placeholder="Enter Final Code">
-  <button id="validateBtn">Validate</button>
-</div>
-
-<div id="virus" class="virus-banner">ACCESS GRANTED<br>Network Restored</div>
+  <div id="virus" class="virus-banner">
+    <p style="font-size:80px;">ACCESS GRANTED</p>
+    <br><p style="font-size:30px;">Network Restored</p>
+  </div>
 
 <script>
 (() => {
   const VALID_CODES = {
-    1: "CRYPTO",
-    2: "SECRET",
-    3: "OMEGA9",
-    4: "ZENIX42",
-    5: "SPY2025",
-    6: "REDWALL"
+    1: "CRYPTO", 2: "SECRET", 3: "OMEGA9",
+    4: "ZENIX42", 5: "SPY2025", 6: "REDWALL"
   };
 
   const groupSelect = document.getElementById('groupSelect');
   const secretCode = document.getElementById('secretCode');
   const virus = document.getElementById('virus');
-  const timerDisplay = document.getElementById('timer');
+  const timerDisplay = document.getElementById('timerDisplay');
 
-  let interval = null;
+  let timeLeft = 15 * 60;
+  let timer = null;
   let groupKey = null;
-  let remaining = 0;
-  const TOTAL = 15 * 60; // 15 min in seconds
 
-  // Update display
-  function updateDisplay() {
-    const m = Math.floor(remaining / 60);
-    const s = remaining % 60;
-    timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  function formatTime(t) {
+    const m = Math.floor(t / 60);
+    const s = t % 60;
+    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
 
-  // Load timer if existing
-  function loadTimer() {
-    if (!groupKey) return;
-    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
-    remaining = data.remaining ?? TOTAL;
-    if (data.started && !data.stopped) startCountdown();
-    updateDisplay();
+  function updateTimerDisplay() {
+    timerDisplay.textContent = `Time Left: ${formatTime(timeLeft)}`;
   }
 
   function startCountdown() {
-    if (interval) clearInterval(interval);
-    interval = setInterval(() => {
-      if (remaining > 0) {
-        remaining--;
-        updateDisplay();
-        const data = JSON.parse(localStorage.getItem(groupKey)) || {};
-        data.remaining = remaining;
-        localStorage.setItem(groupKey, JSON.stringify(data));
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        saveTimer();
+        updateTimerDisplay();
       } else {
-        clearInterval(interval);
-        alert('⛔ Time Over!');
+        clearInterval(timer);
+        timerDisplay.textContent = '⛔ Time Over!';
       }
     }, 1000);
+  }
+
+  function saveTimer() {
+    if (groupKey) {
+      const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+      data.remaining = timeLeft;
+      data.started = true;
+      localStorage.setItem(groupKey, JSON.stringify(data));
+    }
   }
 
   // React to controller commands
   window.addEventListener('storage', e => {
     if (e.key === groupKey && e.newValue) {
       const data = JSON.parse(e.newValue);
-      if (data.started && !data.stopped && !interval) {
-        remaining = data.remaining ?? TOTAL;
+      if (data.started && !data.stopped) {
+        timeLeft = data.remaining ?? timeLeft;
         startCountdown();
-      }
-      if (data.stopped) clearInterval(interval);
+      } else if (data.stopped) clearInterval(timer);
     }
   });
 
-  // Validation success
-  document.getElementById('validateBtn').addEventListener('click', () => {
+  document.getElementById('checkBtn').addEventListener('click', () => {
     const g = groupSelect.value;
+    if (!g) return alert("Select group first");
     const code = secretCode.value.trim().toUpperCase();
-    if (!g) return alert("Select group first.");
     if (code === VALID_CODES[g]) {
-      clearInterval(interval);
+      clearInterval(timer);
       virus.classList.add('show');
-      const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+      const key = `group_${g}_timer`;
+      const data = JSON.parse(localStorage.getItem(key)) || {};
       data.stopped = true;
       data.validated = true;
       data.validatedAt = new Date().toLocaleTimeString();
-      localStorage.setItem(groupKey, JSON.stringify(data));
+      localStorage.setItem(key, JSON.stringify(data));
       alert(`✅ Group ${g} validated!`);
-    } else {
-      alert("❌ Wrong code!");
-    }
+    } else alert("❌ Incorrect code!");
   });
 
   groupSelect.addEventListener('change', () => {
     groupKey = `group_${groupSelect.value}_timer`;
-    loadTimer();
+    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
+    timeLeft = data.remaining ?? 15*60;
+    updateTimerDisplay();
   });
 })();
 </script>
