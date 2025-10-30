@@ -97,8 +97,6 @@
   button:disabled {
     opacity: .45;
     cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
   }
 
   button:not(:disabled):hover {
@@ -106,8 +104,8 @@
     box-shadow: 0 10px 24px rgba(34,211,238,0.12);
   }
 
-  /* ACCESS GRANTED animation/banner */
-  .virus-banner {
+  /* Banners */
+  .banner {
     position: fixed;
     left: 50%;
     top: 50%;
@@ -120,23 +118,40 @@
     background: rgba(0,0,0,0.25);
     padding: 30px 44px;
     border-radius: 12px;
-    color: #b8ffb2;
-    text-shadow: 0 0 22px #00ff66, 0 0 48px #00ff66;
     display: none;
     z-index: 1000;
-    border: 1px solid rgba(0,255,102,0.08);
     backdrop-filter: blur(4px);
     animation: flickerMove 1.4s infinite;
   }
 
-  .virus-banner.show { display:block; }
+  .banner.show { display:block; }
+
+  /* ACCESS GRANTED */
+  #virus {
+    color: #b8ffb2;
+    text-shadow: 0 0 22px #00ff66, 0 0 48px #00ff66;
+    border: 1px solid rgba(0,255,102,0.08);
+  }
+
+  /* WRONG CODE */
+  #alertBanner {
+    color: #ffbaba;
+    text-shadow: 0 0 22px #ff2222, 0 0 48px #ff1111;
+    border: 1px solid rgba(255,0,0,0.12);
+  }
+
+  /* TIME OVER */
+  #timeUpBanner {
+    color: #ffe4b8;
+    text-shadow: 0 0 22px #ffa200, 0 0 48px #ff7b00;
+    border: 1px solid rgba(255,150,0,0.2);
+  }
 
   @keyframes flickerMove {
     0%,100% { opacity: 1; transform: translate(-50%,-50%) scale(1) }
     50% { opacity: 0.78; transform: translate(-50%,-52%) scale(1.02) }
   }
 
-  /* small responsive tweaks */
   @media (max-width:420px) {
     #timerDisplay { font-size: 22px; }
     .card { padding: 22px; }
@@ -145,17 +160,13 @@
 </style>
 </head>
 <body>
-  <div class="card" role="main" aria-labelledby="title">
-    <div id="timerDisplay" aria-live="polite">Time Left: 15:00</div>
-    <h3 id="title">THE FINAL GATE</h3>
+  <div class="card" id="mainCard">
+    <div id="timerDisplay">Time Left: 15:00</div>
+    <h3>THE FINAL GATE</h3>
 
-    <form id="finalForm" autocomplete="off" onsubmit="return false" aria-describedby="instructions">
-      <div id="instructions" style="font-size:13px;color:#bfeeff;margin-bottom:10px;">
-        Select your group, press <strong>Start</strong> to begin the 15-minute run, then enter the secret code to validate.
-      </div>
-
+    <form id="finalForm" onsubmit="return false">
       <label for="groupSelect">Select Group</label>
-      <select id="groupSelect" aria-required="true" aria-label="Select group">
+      <select id="groupSelect">
         <option value="">-- Choose Group --</option>
         <option value="1">Group 1</option>
         <option value="2">Group 2</option>
@@ -167,15 +178,28 @@
 
       <div class="controls">
         <button id="startBtn" type="button" disabled>Start Timer</button>
-        <input id="secretCode" type="text" maxlength="20" placeholder="Enter secret code" aria-label="Secret code" />
-        <button id="checkBtn" type="button">Validate Code</button>
+        <input id="secretCode" type="text" maxlength="20" placeholder="Enter secret code" />
+        <button id="checkBtn" type="button">Validate</button>
       </div>
     </form>
   </div>
 
-  <div id="virus" class="virus-banner" role="status" aria-live="assertive">
+  <!-- ✅ Access Granted -->
+  <div id="virus" class="banner">
     <div style="font-size:56px; margin-bottom:8px; line-height:0.9;">ACCESS GRANTED</div>
     <div style="font-size:20px; opacity:0.95;">Network Restored</div>
+  </div>
+
+  <!-- ❌ Wrong Code -->
+  <div id="alertBanner" class="banner">
+    <div style="font-size:50px; margin-bottom:10px;">VIRUS SPREADING!</div>
+    <div style="font-size:18px;">Maintain close control!</div>
+  </div>
+
+  <!-- ⏰ Time Over -->
+  <div id="timeUpBanner" class="banner">
+    <div style="font-size:46px; margin-bottom:10px;">TIME’S UP!</div>
+    <div style="font-size:18px;">The virus took control of the system.</div>
   </div>
 
 <script>
@@ -183,10 +207,14 @@
   const VALID_CODES = {1:"CRYPTO",2:"SECRET",3:"OMEGA9",4:"ZENIX42",5:"SPY2025",6:"REDWALL"};
   const groupSelect = document.getElementById('groupSelect');
   const secretCode = document.getElementById('secretCode');
-  const virus = document.getElementById('virus');
-  const timerDisplay = document.getElementById('timerDisplay');
   const startBtn = document.getElementById('startBtn');
   const checkBtn = document.getElementById('checkBtn');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const mainCard = document.getElementById('mainCard');
+
+  const virus = document.getElementById('virus');
+  const alertBanner = document.getElementById('alertBanner');
+  const timeUpBanner = document.getElementById('timeUpBanner');
 
   const TOTAL = 15 * 60;
   let timeLeft = TOTAL;
@@ -197,6 +225,7 @@
     const m = Math.floor(t/60), s = t%60;
     return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
+
   function updateTimerDisplay() {
     timerDisplay.textContent = `Time Left: ${formatTime(timeLeft)}`;
   }
@@ -210,7 +239,6 @@
   }
 
   function startCountdown() {
-    if (!groupKey) return;
     if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (timeLeft > 0) {
@@ -220,21 +248,17 @@
       } else {
         clearInterval(timer);
         timer = null;
-        timeLeft = 0;
-        updateTimerDisplay();
-        timerDisplay.textContent = '⛔ Time Over!';
+        mainCard.style.display = 'none';
+        timeUpBanner.classList.add('show');
       }
     }, 1000);
   }
 
-  // enable/disable Start button depending on group selection
   function refreshControls() {
-    if (groupSelect.value) startBtn.disabled = false;
-    else startBtn.disabled = true;
+    startBtn.disabled = !groupSelect.value;
   }
 
   groupSelect.addEventListener('change', () => {
-    // set groupKey & load saved time if exists
     if (!groupSelect.value) {
       groupKey = null;
       timeLeft = TOTAL;
@@ -245,31 +269,16 @@
     groupKey = `group_${groupSelect.value}_timer`;
     const saved = JSON.parse(localStorage.getItem(groupKey));
     timeLeft = (saved && saved.remaining != null) ? saved.remaining : TOTAL;
-    // if already validated for this group, disable controls
-    if (saved && saved.validated) {
-      // show banner if already validated (optional)
-      virus.classList.add('show');
-      startBtn.disabled = true;
-      groupSelect.disabled = true;
-      secretCode.disabled = true;
-      checkBtn.disabled = true;
-    } else {
-      virus.classList.remove('show');
-      secretCode.disabled = false;
-      checkBtn.disabled = false;
-      refreshControls();
-    }
     updateTimerDisplay();
+    refreshControls();
   });
 
   startBtn.addEventListener('click', () => {
-    if (!groupSelect.value) return; // safeguard
-    // ensure we use saved remaining if any (so pressing start multiple times won't reset unexpectedly)
+    if (!groupSelect.value) return;
     const saved = JSON.parse(localStorage.getItem(groupKey));
     timeLeft = (saved && saved.remaining != null) ? saved.remaining : TOTAL;
     updateTimerDisplay();
     startCountdown();
-    // prevent double-start UI feedback
     startBtn.disabled = true;
     groupSelect.disabled = true;
   });
@@ -277,72 +286,27 @@
   checkBtn.addEventListener('click', () => {
     if (!groupSelect.value) return;
     const code = (secretCode.value || '').trim().toUpperCase();
-    if (code === VALID_CODES[groupSelect.value]) {
-      // stop timer and show banner only
-      if (timer) { clearInterval(timer); timer = null; }
-      virus.classList.add('show');
-      secretCode.value = '';
-      // disable controls after success
-      startBtn.disabled = true;
-      checkBtn.disabled = true;
-      secretCode.disabled = true;
-      groupSelect.disabled = true;
 
-      // Save validation and time taken
+    if (code === VALID_CODES[groupSelect.value]) {
+      clearInterval(timer);
+      virus.classList.add('show');
+      mainCard.style.display = 'none';
+
       const saved = JSON.parse(localStorage.getItem(groupKey)) || {};
-      saved.stopped = true;
       saved.validated = true;
-      saved.timeTaken = TOTAL - (timeLeft || 0);
+      saved.timeTaken = TOTAL - timeLeft;
       saved.validatedAt = new Date().toLocaleTimeString();
       localStorage.setItem(groupKey, JSON.stringify(saved));
-      // don't show alerts — only the banner
     } else {
-      // wrong code — clear input and give subtle shake (accessibility-friendly)
+      // Wrong code!
+      alertBanner.classList.add('show');
+      setTimeout(() => alertBanner.classList.remove('show'), 2500);
       secretCode.value = '';
       secretCode.focus();
-      // small visual cue: brief red border
-      secretCode.style.borderColor = 'rgba(255,80,80,0.9)';
-      setTimeout(()=> secretCode.style.borderColor = '', 700);
     }
   });
 
-  // On load, auto-resume any started-but-not-stopped group (prefer the first found)
-  window.addEventListener('load', () => {
-    // find any group that has started and not stopped
-    let found = null;
-    for (let i = 1; i <= 6; i++) {
-      const key = `group_${i}_timer`;
-      const data = JSON.parse(localStorage.getItem(key));
-      if (data && data.started && !data.stopped) {
-        found = { i, data };
-        break;
-      }
-    }
-    if (found) {
-      // restore selection to that group and resume
-      groupSelect.value = String(found.i);
-      groupKey = `group_${found.i}_timer`;
-      timeLeft = found.data.remaining != null ? found.data.remaining : TOTAL;
-      updateTimerDisplay();
-      // small delay so UI settles, then resume
-      setTimeout(() => {
-        startCountdown();
-        // lock selection (but keep start disabled already)
-        groupSelect.disabled = true;
-        startBtn.disabled = true;
-      }, 200);
-    } else {
-      // no running timers — ensure UI is in initial state
-      groupSelect.value = '';
-      groupKey = null;
-      timeLeft = TOTAL;
-      updateTimerDisplay();
-      refreshControls();
-      virus.classList.remove('show');
-    }
-  });
-
-  // ensure Start button state is correct initially (for browsers that restore form values)
+  updateTimerDisplay();
   refreshControls();
 })();
 </script>
