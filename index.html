@@ -20,10 +20,9 @@
       transition: background 2s ease;
       background-image: url('background.png');
       background-size: cover;
-      overflow: hidden;
     }
 
-    .wrap{width:100%;max-width:920px;position:relative;z-index:2;transition:opacity 1s ease}
+    .wrap{width:100%;max-width:920px;position:relative;z-index:2; transition:opacity 1s ease}
     header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
     h1{margin:0;font-size:20px}
     p.lead{margin:6px 0 18px;color:#b8d7ff}
@@ -42,11 +41,10 @@
     .ok{color:#7ee787;font-weight:700}
     .err{color:#ff9e9e;font-weight:700}
 
-    /* --- Virus Banner --- */
     .virus-banner {
       position: fixed;
       left: 50%;
-      top: 45%;
+      top: 50%;
       transform: translate(-50%, -50%);
       padding: 30px 60px;
       border-radius: 20px;
@@ -62,7 +60,6 @@
       animation: flickerMove 1.6s infinite;
     }
     .virus-banner.show{display:block}
-
     @keyframes flickerMove {
       0%{opacity:1;transform:translate(-50%, -50%) translateY(0)}
       25%{opacity:0.8;transform:translate(-50%, -50%) translateY(-8px)}
@@ -71,19 +68,17 @@
       100%{opacity:1;transform:translate(-50%, -50%) translateY(0)}
     }
 
-    /* --- Blackout overlay --- */
-    .blackout {
+    /* 🌑 BLACKOUT OVERLAY */
+    #blackout {
       position: fixed;
       inset: 0;
-      background: black;
-      opacity: 0;
+      background: rgba(0, 0, 0, 0);
+      z-index: 9998;
       pointer-events: none;
-      transition: opacity 1.5s ease;
-      z-index: 999;
+      transition: background 1.2s ease;
     }
-    .blackout.active {
-      opacity: 1;
-      pointer-events: all;
+    #blackout.active {
+      background: rgba(0, 0, 0, 1);
     }
 
     footer{margin-top:12px;color:#90baf2;font-size:13px}
@@ -110,12 +105,12 @@
           <label for="groupSelect">Select Group</label>
           <select id="groupSelect" required>
             <option value="">-- Choose Group --</option>
-            <option value="1">Group 1</option>
-            <option value="2">Group 2</option>
-            <option value="3">Group 3</option>
-            <option value="4">Group 4</option>
-            <option value="5">Group 5</option>
-            <option value="6">Group 6</option>
+            <option value="1">Group 1 </option>
+            <option value="2">Group 2 </option>
+            <option value="3">Group 3 </option>
+            <option value="4">Group 4 </option>
+            <option value="5">Group 5 </option>
+            <option value="6">Group 6 </option>
           </select>
         </div>
 
@@ -136,12 +131,12 @@
   </div>
 
   <div id="virus" class="virus-banner">
-    <p style="font-size:80px;">ACCESS GRANTED</p>
+    <p style="font-size:80px;">ACCESS GRANTED</p><br>
     <p style="font-size:30px;">Network Restored</p>
   </div>
 
-  <!-- Blackout overlay -->
-  <div id="blackout" class="blackout"></div>
+  <!-- 🌑 Blackout overlay -->
+  <div id="blackout"></div>
 
   <script>
   (function(){
@@ -203,17 +198,12 @@
     }
 
     function showVirusCleared() {
-      // Disable all interactions
-      document.querySelectorAll('input, select, button').forEach(e => e.disabled = true);
-      // Show green flicker
+      blackout.classList.add('active'); // 🌑 Fade everything to black
       virus.classList.add('show');
-      // Activate blackout
-      blackout.classList.add('active');
-      // After fade, keep only glowing banner visible
-      document.querySelector('.wrap').style.opacity = '0';
-      setTimeout(() => {
-        document.querySelector('.wrap').remove();
-      }, 1200);
+      virus.setAttribute('aria-hidden', 'false');
+
+      document.querySelector('.card').style.opacity = '0';
+      setTimeout(() => document.querySelector('.card').remove(), 1000);
     }
 
     document.getElementById('checkBtn').addEventListener('click', checkCode);
