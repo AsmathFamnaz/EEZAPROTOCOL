@@ -1,1 +1,122 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Group Validation Results</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Inter, sans-serif;
+    background: #0f1724;
+    color: #e6eef8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* horizontal center */
+    align-items: center;     /* vertical center */
+  }
+  .container {
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,255,102,0.2);
+  }
+  th, td {
+    padding: 12px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  th {
+    background: rgba(255,255,255,0.1);
+    font-weight: bold;
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+  .success { color: #22c55e; }
+  .pending { color: #facc15; }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #7dd3fc;
+    color: #0f1724;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  button:hover { background: #38bdf8; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Group Validation Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Validated</th>
+          <th>Time Taken</th>
+          <th>Validation Time</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <!-- Rows will be populated by JS -->
+      </tbody>
+    </table>
+
+    <button id="clearBtn">Clear All Data</button>
+  </div>
+
+<script>
+(() => {
+  const tbody = document.getElementById('resultsBody');
+  const clearBtn = document.getElementById('clearBtn');
+
+  function formatTime(sec) {
+    const m = Math.floor(sec/60), s = sec % 60;
+    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+
+  function renderTable() {
+    tbody.innerHTML = ''; // clear first
+    for (let i = 1; i <= 6; i++) {
+      const key = `group_${i}_timer`;
+      const data = JSON.parse(localStorage.getItem(key)) || {};
+      const validated = data.validated ? '✅' : '❌';
+      const timeTaken = data.timeTaken != null ? formatTime(data.timeTaken) : '-';
+      const validatedAt = data.validatedAt || '-';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>Group ${i}</td>
+        <td class="${data.validated ? 'success' : 'pending'}">${validated}</td>
+        <td>${timeTaken}</td>
+        <td>${validatedAt}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  }
+
+  clearBtn.addEventListener('click', () => {
+    if(confirm("Are you sure you want to clear all group data?")) {
+      localStorage.clear();
+      renderTable();
+    }
+  });
+
+  renderTable();
+})();
+</script>
+</body>
+</html>
