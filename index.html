@@ -5,26 +5,83 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Eeza Protocol — Gong Enterprises</title>
 <style>
-  :root {--card:#0f1724;--accent:#7dd3fc;--success:#22c55e;--glass:rgba(255,255,255,0.03)}
-  * {box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
   body {
-    margin:0;color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:24px;transition:background 2s ease;background-image:url('background.png');background-size:cover;
+    margin: 0;
+    color: #e6eef8;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('background.png');
+    background-size: cover;
+    padding: 24px;
+    font-family: Inter, sans-serif;
   }
-  .wrap{width:100%;max-width:920px;position:relative;z-index:2;transition:opacity 1s ease}
-  .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04);padding:22px;border-radius:12px;backdrop-filter: blur(6px);transition:opacity 1s ease}
-  #timerDisplay {position: fixed;top: 10px;right: 30px;font-size: 24px;color: #ff6b6b;font-weight: bold;text-shadow: 0 0 10px #ff0000;z-index: 9999;}
-  .virus-banner {position: fixed;left: 50%;top: 5%;transform: translate(-50%, -50%);
-    padding: 30px 60px;border-radius: 20px;z-index: 9999;font-weight: 900;letter-spacing: 3px;text-transform: uppercase;
-    text-align: center;background: none;color: #b8ffb2;text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;display: none;
-    animation: flickerMove 1.6s infinite;}
-  .virus-banner.show{display:block;}
-  @keyframes flickerMove {0%{opacity:1;transform:translateX(-50%) translateY(0)}
-    25%{opacity:0.8;transform:translateX(-50%) translateY(-8px)}
-    50%{opacity:1;transform:translateX(-50%) translateY(4px)}
-    75%{opacity:0.85;transform:translateX(-50%) translateY(-4px)}
-    100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+  .wrap {
+    width: 100%;
+    max-width: 920px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);
+    padding:22px;
+    border-radius:12px;
+    backdrop-filter: blur(6px);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+  #timerDisplay {
+    font-size: 24px;
+    color: #ff6b6b;
+    font-weight: bold;
+    text-shadow: 0 0 10px #ff0000;
+    margin-bottom: 20px;
+  }
+  .virus-banner {
+    position: fixed;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%, -50%);
+    padding: 30px 60px;
+    border-radius: 20px;
+    z-index: 9999;
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    background: none;
+    color: #b8ffb2;
+    text-shadow: 0 0 20px #00ff66, 0 0 40px #00ff66;
+    display: none;
+    animation: flickerMove 1.6s infinite;
+  }
+  .virus-banner.show { display: block; }
+  @keyframes flickerMove {
+    0% { opacity:1; transform:translateX(-50%) translateY(0) }
+    25% { opacity:0.8; transform:translateX(-50%) translateY(-8px) }
+    50% { opacity:1; transform:translateX(-50%) translateY(4px) }
+    75% { opacity:0.85; transform:translateX(-50%) translateY(-4px) }
+    100% { opacity:1; transform:translateX(-50%) translateY(0) }
+  }
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #7dd3fc;
+    color: #0f1724;
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  button:hover { background: #38bdf8; }
+  select, input { padding: 8px; width: 80%; margin-bottom: 10px; border-radius: 6px; border: 1px solid #ccc; }
 </style>
 </head>
 <body>
@@ -33,7 +90,7 @@
     <div class="card">
       <h2>Final Group Validation Console</h2>
       <form id="finalForm" autocomplete="off" onsubmit="return false">
-        <label>Select Group</label>
+        <label>Select Group</label><br>
         <select id="groupSelect">
           <option value="">-- Choose Group --</option>
           <option value="1">Group 1</option>
@@ -42,9 +99,8 @@
           <option value="4">Group 4</option>
           <option value="5">Group 5</option>
           <option value="6">Group 6</option>
-        </select><br><br>
-
-        <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required /><br><br>
+        </select><br>
+        <input id="secretCode" type="text" maxlength="20" placeholder="Enter your secret code" required /><br>
         <button id="startBtn" type="button">Start Timer</button>
         <button id="checkBtn" type="button">Validate Code</button>
       </form>
@@ -67,7 +123,6 @@
 
   let timeLeft = 15*60;
   let timer = null;
-  let groupKey = null;
 
   function formatTime(t) {
     const m = Math.floor(t/60), s = t%60;
@@ -79,12 +134,10 @@
   }
 
   function startCountdown() {
-    if (!groupKey) return alert("Select a group first!");
     if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (timeLeft > 0) {
         timeLeft--;
-        saveTimer();
         updateTimerDisplay();
       } else {
         clearInterval(timer);
@@ -93,27 +146,11 @@
     }, 1000);
   }
 
-  function saveTimer() {
-    if (!groupKey) return;
-    const data = JSON.parse(localStorage.getItem(groupKey)) || {};
-    data.remaining = timeLeft;
-    data.started = true;
-    localStorage.setItem(groupKey, JSON.stringify(data));
-  }
-
   startBtn.addEventListener('click', () => {
     if (!groupSelect.value) return alert("Select a group first!");
-    groupKey = `group_${groupSelect.value}_timer`;
-    const saved = JSON.parse(localStorage.getItem(groupKey));
-    timeLeft = saved?.remaining ?? 15*60;
-    startCountdown();
-  });
-
-  groupSelect.addEventListener('change', () => {
-    groupKey = `group_${groupSelect.value}_timer`;
-    const saved = JSON.parse(localStorage.getItem(groupKey));
-    timeLeft = saved?.remaining ?? 15*60;
+    timeLeft = 15*60; // reset timer on start
     updateTimerDisplay();
+    startCountdown();
   });
 
   document.getElementById('checkBtn').addEventListener('click', () => {
@@ -123,30 +160,29 @@
       clearInterval(timer);
       virus.classList.add('show');
 
-      const key = `group_${groupSelect.value}_timer`;
-      const data = JSON.parse(localStorage.getItem(key)) || {};
-      data.stopped = true;
-      data.validated = true;
-      data.timeTaken = 15*60 - timeLeft; // record time taken
-      data.validatedAt = new Date().toLocaleTimeString();
-      localStorage.setItem(key, JSON.stringify(data));
+      const dataToSend = {
+        group: groupSelect.value,
+        timeTaken: 15*60 - timeLeft,
+        validatedAt: new Date().toISOString()
+      };
 
-      alert(`✅ Group ${groupSelect.value} validated! Time taken: ${formatTime(data.timeTaken)}`);
+      // POST to server endpoint
+      fetch('https://asmathfamnaz.github.io/EEZAPROTOCOL/results.html', { // replace with your endpoint
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend)
+      })
+      .then(res => {
+        if(res.ok) alert(`✅ Group ${groupSelect.value} validated! Time sent to server.`);
+        else alert(`❌ Server error!`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("❌ Network error! Could not send data.");
+      });
+
     } else {
       alert("❌ Incorrect code!");
-    }
-  });
-
-  // Persist timer if page reloads
-  window.addEventListener('load', () => {
-    if (groupSelect.value) {
-      groupKey = `group_${groupSelect.value}_timer`;
-      const saved = JSON.parse(localStorage.getItem(groupKey));
-      if (saved?.started && !saved.stopped) {
-        timeLeft = saved.remaining ?? 15*60;
-        startCountdown();
-      }
-      updateTimerDisplay();
     }
   });
 
