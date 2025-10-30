@@ -173,26 +173,31 @@
     updateTimerDisplay();
   });
 
-  document.getElementById('checkBtn').addEventListener('click', () => {
-    if (!groupSelect.value) return alert("Select a group first!");
-    const code = secretCode.value.trim().toUpperCase();
-    if (code === VALID_CODES[groupSelect.value]) {
-      clearInterval(timer);
-      virus.classList.add('show');
+ document.getElementById('checkBtn').addEventListener('click', () => {
+  if (!groupSelect.value) return;
 
-      const key = `group_${groupSelect.value}_timer`;
-      const data = JSON.parse(localStorage.getItem(key)) || {};
-      data.stopped = true;
-      data.validated = true;
-      data.timeTaken = 15*60 - timeLeft; // record time taken
-      data.validatedAt = new Date().toLocaleTimeString();
-      localStorage.setItem(key, JSON.stringify(data));
+  const code = secretCode.value.trim().toUpperCase();
+  if (code === VALID_CODES[groupSelect.value]) {
+    clearInterval(timer);
+    virus.classList.add('show');   // show only the banner
+    secretCode.value = '';         // clear input
+    groupSelect.disabled = true;   // prevent further edits
+    startBtn.disabled = true;      // prevent restarting
 
-      alert(`✅ Group ${groupSelect.value} validated! Time taken: ${formatTime(data.timeTaken)}`);
-    } else {
-      alert("❌ Incorrect code!");
-    }
-  });
+    // Save validation and time taken
+    const key = `group_${groupSelect.value}_timer`;
+    const data = JSON.parse(localStorage.getItem(key)) || {};
+    data.stopped = true;
+    data.validated = true;
+    data.timeTaken = 15*60 - timeLeft;
+    data.validatedAt = new Date().toLocaleTimeString();
+    localStorage.setItem(key, JSON.stringify(data));
+
+  } else {
+    secretCode.value = '';   // clear wrong input
+  }
+});
+
 
   // Auto-resume timer on reload if started and not stopped
   window.addEventListener('load', () => {
