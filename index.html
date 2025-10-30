@@ -122,30 +122,38 @@
     z-index: 1000;
     backdrop-filter: blur(4px);
     animation: flickerMove 1.4s infinite;
+    position: fixed;
   }
 
   .banner.show { display:block; }
 
+  /* Close button */
+  .closeBtn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: rgba(0,0,0,0.3);
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    line-height: 28px;
+    text-align: center;
+    transition: background .2s;
+  }
+
+  .closeBtn:hover { background: rgba(255,0,0,0.6); }
+
   /* ACCESS GRANTED */
-  #virus {
-    color: #b8ffb2;
-    text-shadow: 0 0 22px #00ff66, 0 0 48px #00ff66;
-    border: 1px solid rgba(0,255,102,0.08);
-  }
-
+  #virus { color: #b8ffb2; text-shadow: 0 0 22px #00ff66, 0 0 48px #00ff66; border: 1px solid rgba(0,255,102,0.08); }
   /* WRONG CODE */
-  #alertBanner {
-    color: #ffbaba;
-    text-shadow: 0 0 22px #ff2222, 0 0 48px #ff1111;
-    border: 1px solid rgba(255,0,0,0.12);
-  }
-
+  #alertBanner { color: #ffbaba; text-shadow: 0 0 22px #ff2222, 0 0 48px #ff1111; border: 1px solid rgba(255,0,0,0.12); }
   /* TIME OVER */
-  #timeUpBanner {
-    color: #ffe4b8;
-    text-shadow: 0 0 22px #ffa200, 0 0 48px #ff7b00;
-    border: 1px solid rgba(255,150,0,0.2);
-  }
+  #timeUpBanner { color: #ffe4b8; text-shadow: 0 0 22px #ffa200, 0 0 48px #ff7b00; border: 1px solid rgba(255,150,0,0.2); }
 
   @keyframes flickerMove {
     0%,100% { opacity: 1; transform: translate(-50%,-50%) scale(1) }
@@ -165,7 +173,7 @@
     <h3>THE FINAL GATE</h3>
 
     <form id="finalForm" onsubmit="return false">
-       <div id="instructions" style="font-size:13px;color:#bfeeff;margin-bottom:10px;">
+      <div id="instructions" style="font-size:13px;color:#bfeeff;margin-bottom:10px;">
         Select your group, press <strong>Start</strong> to begin the 15-minute run, then enter the secret code to validate.
       </div>
       <label for="groupSelect">Select Group</label>
@@ -189,18 +197,21 @@
 
   <!-- ✅ Access Granted -->
   <div id="virus" class="banner">
+    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
     <div style="font-size:56px; margin-bottom:8px; line-height:0.9;">ACCESS GRANTED</div>
     <div style="font-size:20px; opacity:0.95;">Network Restored</div>
   </div>
 
   <!-- ❌ Wrong Code -->
   <div id="alertBanner" class="banner">
+    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
     <div style="font-size:50px; margin-bottom:10px;">VIRUS SPREADING!</div>
     <div style="font-size:18px;">Maintain close control!</div>
   </div>
 
   <!-- ⏰ Time Over -->
   <div id="timeUpBanner" class="banner">
+    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
     <div style="font-size:46px; margin-bottom:10px;">TIME’S UP!</div>
     <div style="font-size:18px;">The virus took control of the system.</div>
   </div>
@@ -303,7 +314,6 @@
     } else {
       // Wrong code!
       alertBanner.classList.add('show');
-      setTimeout(() => alertBanner.classList.remove('show'), 2500);
       secretCode.value = '';
       secretCode.focus();
     }
