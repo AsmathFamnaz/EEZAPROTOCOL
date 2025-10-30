@@ -122,7 +122,6 @@
     z-index: 1000;
     backdrop-filter: blur(4px);
     animation: flickerMove 1.4s infinite;
-    position: fixed;
   }
 
   .banner.show { display:block; }
@@ -168,55 +167,54 @@
 </style>
 </head>
 <body>
-  <audio id="beepAudio" src="beep.mp3" preload="auto"></audio>
+<audio id="beepAudio" src="beep.mp3" preload="auto"></audio>
 
-  <div class="card" id="mainCard">
-    <div id="timerDisplay">Time Left: 15:00</div>
-    <h3>THE FINAL GATE</h3>
+<div class="card" id="mainCard">
+  <div id="timerDisplay">Time Left: 15:00</div>
+  <h3>THE FINAL GATE</h3>
 
-    <form id="finalForm" onsubmit="return false">
-      <div id="instructions" style="font-size:13px;color:#bfeeff;margin-bottom:10px;">
-        Select your group, press <strong>Start</strong> to begin the 15-minute run, then enter the secret code to validate.
-      </div>
-    
-      <select id="groupSelect">
-        <option value="">-- Choose Group --</option>
-        <option value="1">Group 1</option>
-        <option value="2">Group 2</option>
-        <option value="3">Group 3</option>
-        <option value="4">Group 4</option>
-        <option value="5">Group 5</option>
-        <option value="6">Group 6</option>
-      </select>
+  <form id="finalForm" onsubmit="return false">
+    <div id="instructions" style="font-size:13px;color:#bfeeff;margin-bottom:10px;">
+      Select your group, press <strong>Start</strong> to begin the 15-minute run, then enter the secret code to validate.
+    </div>
+  
+    <select id="groupSelect">
+      <option value="">-- Choose Group --</option>
+      <option value="1">Group 1</option>
+      <option value="2">Group 2</option>
+      <option value="3">Group 3</option>
+      <option value="4">Group 4</option>
+      <option value="5">Group 5</option>
+      <option value="6">Group 6</option>
+    </select>
 
-      <div class="controls">
-        <button id="startBtn" type="button" disabled>Start Timer</button>
-        <input id="secretCode" type="text" maxlength="20" placeholder="Enter secret code" />
-        <button id="checkBtn" type="button">Validate</button>
-      </div>
-    </form>
-  </div>
+    <div class="controls">
+      <button id="startBtn" type="button" disabled>Start Timer</button>
+      <input id="secretCode" type="text" maxlength="20" placeholder="Enter secret code" disabled />
+      <button id="checkBtn" type="button" disabled>Validate</button>
+    </div>
+  </form>
+</div>
 
-  <!-- ✅ Access Granted -->
-  <div id="virus" class="banner">
-    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
-    <div style="font-size:56px; margin-bottom:8px; line-height:0.9;">ACCESS GRANTED</div>
-    <div style="font-size:20px; opacity:0.95;">Network Restored</div>
-  </div>
+<!-- ✅ Access Granted -->
+<div id="virus" class="banner">
+  <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
+  <div style="font-size:56px; margin-bottom:8px; line-height:0.9;">ACCESS GRANTED</div>
+  <div style="font-size:20px; opacity:0.95;">Network Restored</div>
+</div>
 
-  <!-- ❌ Wrong Code -->
-  <div id="alertBanner" class="banner">
-    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
-    <div style="font-size:50px; margin-bottom:10px;">VIRUS SPREADING!</div>
-    
-  </div>
+<!-- ❌ Wrong Code -->
+<div id="alertBanner" class="banner">
+  <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
+  <div style="font-size:50px; margin-bottom:10px;">VIRUS SPREADING!</div>
+</div>
 
-  <!-- ⏰ Time Over -->
-  <div id="timeUpBanner" class="banner">
-    <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
-    <div style="font-size:46px; margin-bottom:10px;">TIME’S UP!</div>
-    <div style="font-size:18px;">The virus took control of the system.</div>
-  </div>
+<!-- ⏰ Time Over -->
+<div id="timeUpBanner" class="banner">
+  <button class="closeBtn" onclick="this.parentElement.classList.remove('show')">×</button>
+  <div style="font-size:46px; margin-bottom:10px;">TIME’S UP!</div>
+  <div style="font-size:18px;">The virus took control of the system.</div>
+</div>
 
 <script>
 (() => {
@@ -255,30 +253,25 @@
   }
 
   function startCountdown() {
-  const beep = document.getElementById('beepAudio');
-
-  if (timer) clearInterval(timer);
-  timer = setInterval(() => {
-    if (timeLeft > 0) {
-      timeLeft--;
-      saveTimer();
-      updateTimerDisplay();
-
-      // Play beep in the last 10 seconds
-      if (timeLeft <= 10) {
-        beep.currentTime = 0;
-        beep.play();
+    const beep = document.getElementById('beepAudio');
+    if (timer) clearInterval(timer);
+    timer = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        saveTimer();
+        updateTimerDisplay();
+        if (timeLeft <= 10) {
+          beep.currentTime = 0;
+          beep.play();
+        }
+      } else {
+        clearInterval(timer);
+        timer = null;
+        mainCard.style.display = 'none';
+        timeUpBanner.classList.add('show');
       }
-
-    } else {
-      clearInterval(timer);
-      timer = null;
-      mainCard.style.display = 'none';
-      timeUpBanner.classList.add('show');
-    }
-  }, 1000);
-}
-
+    }, 1000);
+  }
 
   function refreshControls() {
     startBtn.disabled = !groupSelect.value;
@@ -290,6 +283,8 @@
       timeLeft = TOTAL;
       updateTimerDisplay();
       refreshControls();
+      secretCode.disabled = true;
+      checkBtn.disabled = true;
       return;
     }
     groupKey = `group_${groupSelect.value}_timer`;
@@ -297,6 +292,8 @@
     timeLeft = (saved && saved.remaining != null) ? saved.remaining : TOTAL;
     updateTimerDisplay();
     refreshControls();
+    secretCode.disabled = true;
+    checkBtn.disabled = true;
   });
 
   startBtn.addEventListener('click', () => {
@@ -307,24 +304,26 @@
     startCountdown();
     startBtn.disabled = true;
     groupSelect.disabled = true;
+
+    // ✅ Enable secret code and validate button
+    secretCode.disabled = false;
+    checkBtn.disabled = false;
+    secretCode.focus();
   });
 
   checkBtn.addEventListener('click', () => {
     if (!groupSelect.value) return;
     const code = (secretCode.value || '').trim().toUpperCase();
-
     if (code === VALID_CODES[groupSelect.value]) {
       clearInterval(timer);
       virus.classList.add('show');
       mainCard.style.display = 'none';
-
       const saved = JSON.parse(localStorage.getItem(groupKey)) || {};
       saved.validated = true;
       saved.timeTaken = TOTAL - timeLeft;
       saved.validatedAt = new Date().toLocaleTimeString();
       localStorage.setItem(groupKey, JSON.stringify(saved));
     } else {
-      // Wrong code!
       alertBanner.classList.add('show');
       secretCode.value = '';
       secretCode.focus();
